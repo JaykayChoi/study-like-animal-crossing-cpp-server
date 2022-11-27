@@ -1,0 +1,128 @@
+{
+  // ----------------------------------------------------
+  // Configurations for botClientApp.
+  //
+  // ----------------------------------------------------
+
+"common":{
+  // 앱에서 실행되는 봇들이 동작할 시나리오 이름
+  "scenarioTypeName": "TownRandomMove",
+
+  // 봇들이 접속할 authd 주소
+  "authd": "http://localhost:10701",
+
+  // 봇 생성수
+  "numBots" : 200,
+
+  // 봇 계정 접두어(봇 계정은 userNamePrefix + pubIdStart 에서 1씩 증가하면서 numBots 만큼 생성됨.
+  // ex: bot10020, bot10021, ... )
+  "userNamePrefix": "bot",
+
+  // 봇 계정 시작번호
+  "pubIdStart": 40001,
+
+  "point":{
+      "minDucatAmount": 100000,
+      "ducatAmount": 100000000,
+
+      "minBluegemAmount": 100000,
+      "bluegemAmount": 100000000,
+  },
+
+  "reconnectWaitTimeSec": 0, // seconds(초)
+
+  "townCmsId": 11000000,
+  "destinationTownCmsIds":[ 11000001,11000177],  // 세비아, 파루
+  "destinationBuildingType": "DEPART",   // 출항소
+
+  "autoSailingPaths": {
+    "11000001": [
+      {"latitude":36.907085418701,"longitude":-7.9754228591919},
+      {"latitude":36.373523712158,"longitude":-6.3120579719543}],
+    "11000177":[
+      {"latitude":36.375476837158,"longitude":-6.4952826499939},
+      {"latitude":37.033653259277,"longitude":-7.9572615623474}]
+  },
+
+  "tickIntervalMsec": 2000,
+  "admiralCmsId": 20000001,   // 선택 주인공 (조안 페레로)
+  "companyJobCmsId": 21500001,
+
+  // 랜덤 이동의 시간 간격(Milisecond)
+  "randomMoveTickInterval": 1000,
+
+  // 랜덤 이동시 중심이 되는 위경도
+  "oceanRandomMoveCenterLocation":{
+    "latitude": 36.524478912354,
+    "longitude": -7.5452632904053,
+  },
+
+  // 랜덤 이동시 반경
+  "randomMoveRange": 5000, // ureal unit
+
+  }, // end of common
+
+  // ----------------------------------------------------
+  // OceanRandomMove scenario configurations
+  // 해양 이동 테스트
+  // 셋팅: 해양입장, 해상 랜덤이동 (리전이동 포함) 무한 반복
+  // 목적: 시야범위내 브로드캐스팅 성능 측정, Local NPC 생성 및 해제시 부하 측정. 서버 할당 테스트
+  // 관련 서버: oceand, lobbyd, zonelbd (oceanLbRedis)
+  // ----------------------------------------------------
+  "OceanRandomMove": {
+  },
+
+  // ----------------------------------------------------
+  // OfflineSailing scenario configurations
+  // 오프라인 항해 테스트
+  // 셋팅: 해양입장, 자동항해 설정, 접속종료( 오프라인 자동 항해 진행 ) 무한 반복
+  // 목적: 오프라인 항해시 서버 부하 측정
+  // 관련 서버: saild (sailRedis), oceand, townd, lobbyd
+  // ----------------------------------------------------
+  "OfflineSailing": {
+    "reconnectWaitTimeSec": 90, // seconds(초)
+    "destinationTownCmsIds":[ 11000001,11000177],  // 세비아, 파루
+  },
+
+  // ----------------------------------------------------
+  // GoverInvestActor scenario configurations
+  // 공관 투자 테스트
+  // 셋팅: 공관 입장(칸디아 등), 투자, 무한 반복
+  // 목적: 타운내 브로드캐스팅 부하 측정
+  // 관련 서버: townd, lobbyd, realmd
+  // ----------------------------------------------------
+  "GoverInvestActor": {
+    "destinationBuildingType": "GOVER",   // 공관
+    "destinationTownCmsIds":[11000094],  // 세우타
+  },
+
+  // ----------------------------------------------------
+  // TownRandomMove scenario configurations
+  // 마을내 유저 이동 테스트
+  // 셋팅: 마을 입장, 마을내 유저 이동 무한 반복
+  // 목적: 마을 시야범위내 브로드캐스팅 성능 측정,
+  // 관련 서버: townd, lobbyd
+  // ----------------------------------------------------
+  "TownRandomMove": {
+    "destinationTownCmsIds":[11000094],  // 세우타
+  },
+
+  // ----------------------------------------------------
+  // InfiniteLoopTownAndOcean scenario configurations
+  // ----------------------------------------------------
+  "InfiniteLoopTownAndOcean": {
+  },
+
+  // ----------------------------------------------------
+  // InfiniteLoopReconnect scenario configurations
+  // ----------------------------------------------------
+  "InfiniteLoopReconnect": {
+  },
+
+  // ----------------------------------------------------
+  // ChangeToOceanAndStayForever scenario configurations
+  // ----------------------------------------------------
+  "ChangeToOceanAndStayForever": {
+  },
+
+}

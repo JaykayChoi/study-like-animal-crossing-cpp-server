@@ -1,0 +1,12 @@
+{
+  "default": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "lac_dev",
+    "password": "dev123$",
+    "driver": "mysql",
+    "multipleStatements": true,
+    "supportBigNumbers": true,
+    "bigNumberStrings": true
+  }
+}

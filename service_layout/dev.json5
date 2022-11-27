@@ -1,0 +1,77 @@
+{
+  "sharedConfig": {
+    "mysqlAuthDb": {
+      "host": "localhost",
+      "port": 3306,
+      "user": "lac_dev",
+      "password": "dev123$",
+      "database": "lac_auth",
+      "multipleStatements": true,
+      "supportBigNumbers": true,
+      "bigNumberStrings": true,
+      "connectTimeout": 3000,
+      "flags": "-FOUND_ROWS",
+      "driver": "mysql",
+    },
+  },
+
+  // ----------------------------------------------------
+  // World 목록 + 설정.
+  // ----------------------------------------------------
+
+  "world": {
+    "worlds": [
+      {
+        // 월드 ID
+        "id": "UWO-GL-01",
+
+        "mysqlUserDb": {
+          "shardFunction": "userDbShardDev", // or userDbShardLive
+          "sqlDefaultCfg": {
+            "host": "localhost",
+            "port": 3306,
+            "user": "lac_dev",
+            "password": "dev123$",
+            "database": "lac_user",
+            "multipleStatements": true,
+            "supportBigNumbers": true,
+            "bigNumberStrings": true,
+            "connectTimeout": 3000,
+            "flags": "-FOUND_ROWS",
+            "driver": "mysql",
+          },
+          "shards": [
+            {
+              "shardId": 0,
+              "sqlCfg": {
+                "database": "lac_user_00",
+              },
+            },
+            {
+              "shardId": 1,
+              "sqlCfg": {
+                "database": "lac_user_01",
+              },
+            },
+          ],
+        },
+
+        // 월드 DB (lobbyd, realmd 사용)
+        // 변경 시 migrateRdb.ts 같이 수정해주어야 됨
+        "mysqlWorldDb": {
+          "host": "localhost",
+          "port": 3306,
+          "user": "lac_dev",
+          "password": "dev123$",
+          "database": "lac_world",
+          "multipleStatements": true,
+          "supportBigNumbers": true,
+          "bigNumberStrings": true,
+          "connectTimeout": 3000,
+          "flags": "-FOUND_ROWS",
+          "driver": "mysql",
+        },
+      }, // "worldId": "UWO-GL-01"
+    ],
+  },
+}

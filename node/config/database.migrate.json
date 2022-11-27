@@ -1,0 +1,68 @@
+{
+  "user": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "lac_dev",
+    "password": "dev123$",
+    "driver": "mysql",
+    "multipleStatements": true,
+    "supportBigNumbers": true,
+    "bigNumberStrings": true,
+    "database": "lac_user"
+  },
+  "user0": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "lac_dev",
+    "password": "dev123$",
+    "driver": "mysql",
+    "multipleStatements": true,
+    "supportBigNumbers": true,
+    "bigNumberStrings": true,
+    "database": "lac_user_00"
+  },
+  "user1": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "lac_dev",
+    "password": "dev123$",
+    "driver": "mysql",
+    "multipleStatements": true,
+    "supportBigNumbers": true,
+    "bigNumberStrings": true,
+    "database": "lac_user_01"
+  },
+  "test": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "lac_dev",
+    "password": "dev123$",
+    "driver": "mysql",
+    "multipleStatements": true,
+    "supportBigNumbers": true,
+    "bigNumberStrings": true,
+    "database": "lac_test"
+  },
+  "world": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "lac_dev",
+    "password": "dev123$",
+    "driver": "mysql",
+    "multipleStatements": true,
+    "supportBigNumbers": true,
+    "bigNumberStrings": true,
+    "database": "lac_world"
+  },
+  "auth": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "lac_dev",
+    "password": "dev123$",
+    "driver": "mysql",
+    "multipleStatements": true,
+    "supportBigNumbers": true,
+    "bigNumberStrings": true,
+    "database": "lac_auth"
+  }
+}

@@ -1,0 +1,27 @@
+{
+    "extensions.ignoreRecommendations": true,
+    "editor.minimap.enabled": false,
+    "terminal.integrated.rendererType": "dom",
+    "window.zoomLevel": 0,
+    "files.exclude": {
+        "**/node_modules/**": true
+    },
+    "editor.tabSize": 2,
+    "prettier.printWidth": 100,
+    "editor.formatOnType": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "gitlens.keymap": "none",
+    "prettier.disableLanguages": [
+        "json5",
+        "json"
+    ],
+    "editor.formatOnPaste": false,
+    "formattingToggle.affects": [
+        "formatOnPaste",
+        "formatOnSave",
+        "formatOnType"
+    ],
+    "editor.formatOnSave": true
+}

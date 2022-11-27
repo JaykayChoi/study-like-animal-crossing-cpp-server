@@ -1,0 +1,5 @@
+# Set the *.data files to be checked out as binary files.
+# Used for the HTTP test data files, they need to have the CRLF line endings
+# even on Linux, because they're HTTP protocol dumps.
+*.data binary
+*.lib filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,8 @@
+# Visual Studio Code launch configuration file
+.vscode/launch.json
+
+node_modules/*
+dist/*
+
+yarn-error.log
+.prettierignore

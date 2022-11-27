@@ -1,0 +1,45 @@
+{
+  // ----------------------------------------------------
+  // Configurations for botClientApp.
+  //
+  // ----------------------------------------------------
+
+"common":{
+  // 앱에서 실행되는 봇들이 동작할 시나리오 이름
+  "scenarioTypeName": "None",
+
+  // 봇 생성수
+  "numBots" : 3,
+
+  "userNamePrefix": "bot",
+
+  // 봇 계정 시작번호
+  "pubIdStart": 11001,
+
+  "point":{
+      "minDucatAmount": 100000,
+      "ducatAmount": 100000000,
+
+      "minBluegemAmount": 100000,
+      "bluegemAmount": 100000000,
+  },
+
+  "reconnectWaitTimeSec": 0, // seconds(초)
+
+  "tickIntervalMsec": 2000,
+
+  // 랜덤 이동의 시간 간격(Milisecond)
+  "randomMoveTickInterval": 1000,
+
+  // 랜덤 이동시 반경
+  "randomMoveRange": 5000, // ureal unit
+
+  }, // end of common
+
+
+  // ----------------------------------------------------
+  // TownRandomMove scenario configurations
+  // ----------------------------------------------------
+  "TownRandomMove": {
+  },
+}

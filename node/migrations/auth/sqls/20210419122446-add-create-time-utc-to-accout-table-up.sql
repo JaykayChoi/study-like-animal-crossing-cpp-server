@@ -1,0 +1,2 @@
+ALTER TABLE a_accounts
+  ADD COLUMN createTimeUtc TIMESTAMP NULL DEFAULT NULL AFTER isOnline;

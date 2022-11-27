@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS u_users;
+DROP TABLE IF EXISTS a_world_users;
