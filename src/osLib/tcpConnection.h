@@ -82,7 +82,7 @@ protected:
 
     // Address 로 ip, port 설정.
     static void UpdateAddress(
-        const sockaddr* address, socklen_t addrLen, std::string& ip, int& port);
+        const sockaddr* address, socklen_t addrLen, std::string& inIP, int& port);
 
     void UpdateLocalAddress();
 
@@ -98,5 +98,5 @@ protected:
     bool SendRaw(const void* data, size_t length);
 
     // 소켓에서 데이터가 들어올 때 호출 됨.
-    void OnReceivedCleartextData(const char* data, size_t length);
+    void OnReceivedData(const char* data, size_t length);
 };
