@@ -32,8 +32,7 @@ private:
 /////////////////////////////////////////////////////////////////////////////////////////
 // Global functions
 
-template <typename... Args> 
-extern void Log(fmt::string_view format, const Args&... args)
+template <typename... Args> extern void Log(fmt::string_view format, const Args&... args)
 {
     Logger::Get().Log(fmt::sprintf(format, args...), Logger::ELogLevel::Verbose);
 }

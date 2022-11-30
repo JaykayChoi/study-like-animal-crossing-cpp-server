@@ -3,8 +3,8 @@
 #include "middleware/logger.h"
 #include <atomic>
 #include <csignal>
-#include <thread>
 #include <memory>
+#include <thread>
 
 #include <cstddef>
 #include <ctime>
@@ -52,3 +52,5 @@ typedef unsigned long long uint64;
 
 using ContiguousByteContainer = std::basic_string<std::byte>;
 using ContiguousByteViewContainer = std::basic_string_view<std::byte>;
+
+#define ARRAY_LENGTH(X) (sizeof(X) / sizeof(*(X)))

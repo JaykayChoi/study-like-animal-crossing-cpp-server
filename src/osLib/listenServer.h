@@ -12,7 +12,6 @@
 class TCPConnection;
 
 class ListenServer;
-typedef std::shared_ptr<ListenServer> ListenServerImplPtr;
 
 class ListenServer : public IListenServer
 {
@@ -55,8 +54,7 @@ protected:
     std::string errorMsg_;
 
     // ListenServer::Listen() 에서 생성된 std::shared_ptr<ListenServer>.
-    // std::shared_ptr<ListenServer> selfPtr_;
-    ListenServerImplPtr selfPtr_;
+    std::shared_ptr<ListenServer> selfPtr_;
 
     /**
      * 콜백을 사용하여 새 인스턴스를 만든다.
@@ -67,7 +65,7 @@ protected:
     bool Listen(int port);
 
     static void OnConnected(evconnlistener* listener, evutil_socket_t socket,
-        sockaddr* addr, int len, void* self);
+        sockaddr* addr, int len, void* inSelf);
 
     /**
      * connections_에서 conn 제거.
