@@ -1,4 +1,4 @@
-file(GLOB SRC_FILES  
+file(GLOB SRC_FILES
 	"*.h"
     "*.cpp"
 )
@@ -12,6 +12,7 @@ set(FOLDERS
 	middleware
 	util
 	osLib
+	packetHandler
 )
 
 foreach(folder ${FOLDERS})

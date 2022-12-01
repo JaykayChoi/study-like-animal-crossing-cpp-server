@@ -1,9 +1,10 @@
 ﻿#include "listenServer.h"
 #include "../global.h"
+#include "networkManager.h"
 #include "tcpConnection.h"
 
 #ifdef TCP_CONN_EVENT_BASE_MULTI_THREAD
-// TODO config (TCPConnection::ReadCallback (per connection))
+// TODO jaykay config (TCPConnection::ReadCallback (per connection))
 const int MAX_TCP_CONN_EVENT_BASE_IO_THREAD_COUNT = 5;
 #endif
 
@@ -43,7 +44,7 @@ std::shared_ptr<ListenServer> ListenServer::Listen(
 
     if (res->Listen(port))
     {
-        // TODO
+        NetworkManager::Get().AddListenServer(res);
     }
     else
     {
@@ -85,7 +86,7 @@ void ListenServer::Close()
 
     selfPtr_.reset();
 
-    // TODO
+    NetworkManager::Get().RemoveListenServer(this);
 }
 
 bool ListenServer::Listen(int port)
@@ -93,7 +94,8 @@ bool ListenServer::Listen(int port)
     // std::cout << "ListenServerImpl::Listen (single) thread id: " <<
     // std::this_thread::get_id() << std::endl;
 
-    // TODO
+    // NetworkManager 가 초기화되어 있지 않을 경우 초기화.
+    NetworkManager::Get();
 
     bool bNeedsIpv4Socket = true;
     int err = 0;
@@ -195,7 +197,8 @@ bool ListenServer::Listen(int port)
         return false;
     }
 
-    // TODO
+    connListener_ = evconnlistener_new(NetworkManager::Get().GetEventBase(), OnConnected,
+        this, LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE, 0, sock);
     bIsListening_ = true;
 
     return true;

@@ -53,12 +53,12 @@ protected:
 
     static void LogCallback(int severity, const char* msg);
 
-	/**
-	 * http://wiki.pchero21.com/wiki/Libevent_R3:_Working_with_an_event_loop
-	 * eventBase_ 의 event dispatcher loop 를 실행하는 스레드를 구현.
-	 */
+    /**
+     * http://wiki.pchero21.com/wiki/Libevent_R3:_Working_with_an_event_loop
+     * eventBase_ 의 event dispatcher loop 를 실행하는 스레드를 구현.
+     */
     static void RunEventLoop(NetworkManager* self);
 
     // 이벤트 루프가 시작될 때 libevent 에 의해 호출되는 콜백.
-    static void EventLoopCallback(evutil_socket_t socket, short events, void* self);
+    static void EventLoopCallback(evutil_socket_t socket, short events, void* inSelf);
 };

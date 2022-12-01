@@ -17,8 +17,8 @@ public:
         virtual ~Callback() { }
 
         /**
-         * ITCPConn 가 생성될 때 호출 됨.
-         * 콜백은 나중에 사용하기 위해 ITCPConn instance 을 저장할 수 있지만
+         * ITCPConnection 가 생성될 때 호출 됨.
+         * 콜백은 나중에 사용하기 위해 ITCPConnection instance 을 저장할 수 있지만
            OnError(), OnRemoteClosed() 또는 Close() 바로 뒤에 제거해야 됨.
          */
         virtual void OnConnCreated(std::shared_ptr<ITCPConnection> conn) = 0;
@@ -69,7 +69,7 @@ public:
 
     std::shared_ptr<Callback> GetCallback() const { return callback_; }
 
-    // TODO TLS
+    // TODO jaykay TLS
 protected:
     std::shared_ptr<Callback> callback_;
 

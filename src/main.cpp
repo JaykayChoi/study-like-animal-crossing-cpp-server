@@ -45,7 +45,7 @@ void AbortSignalHandler(int signal)
         return;
     case SIGINT:
     case SIGTERM:
-        // TODO
+        // TODO jaykay
         return;
     }
 }
@@ -53,19 +53,19 @@ void AbortSignalHandler(int signal)
 static BOOL CtrlHandler(DWORD fdwCtrlType)
 {
     LogError("CtrlHandler");
-    // TODO
+    // TODO jaykay
 
     return TRUE;
 }
 
 void ParseArguments(int argc, char** argv)
 {
-    // TODO
+    // TODO jaykay
 }
 
 int Start()
 {
-    // TODO
+    // TODO jaykay
 
     return EXIT_FAILURE;
 }

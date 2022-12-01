@@ -21,7 +21,7 @@ void Logger::Log(std::string s, ELogLevel level)
 
     printf("%s", msg.c_str());
 
-    // TODO: write on file.
+    // TODO jaykay write on file.
 }
 
 std::string Logger::ELogLevelToString(ELogLevel level)
