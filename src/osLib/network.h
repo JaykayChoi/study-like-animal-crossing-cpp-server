@@ -69,7 +69,7 @@ public:
 
     std::shared_ptr<Callback> GetCallback() const { return callback_; }
 
-    // TODO jaykay TLS
+    // TODO TLS
 protected:
     std::shared_ptr<Callback> callback_;
 
