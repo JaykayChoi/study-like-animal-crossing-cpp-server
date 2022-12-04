@@ -3,6 +3,7 @@
 #include "global.h"
 #include "osLib/criticalSection.h"
 #include "osLib/network.h"
+#include "actor/player.h"
 
 enum class EConnectionState : uint8
 {
@@ -84,10 +85,10 @@ private:
     // Protects outgoing data.
     CriticalSection csOutgoingData_;
 
-    // TODO jaykay
+	Player* player_;
 
     // Disconnect packet 이 양방향으로 전송된 경우 true.
-    bool bHasSentDC_;
+    bool bHasSentDisconnect_;
 
     // 마지막으로 완료된 핑 이후 시간.
     std::chrono::steady_clock::duration ping_;
@@ -119,8 +120,8 @@ private:
     // Called by ServerTick()
     void ProcessRecv();
 
-    // TCPConn::Callback overrides.
-    virtual void OnConnCreated(TCPConnPtr conn) override;
+    // ITCPConnection::Callback overrides.
+    virtual void OnConnCreated(std::shared_ptr<ITCPConnection> conn) override;
     virtual void OnReceivedData(const char* data, size_t length) override;
     virtual void OnRemoteClosed() override;
     virtual void OnError(int errorCode, const std::string& errorMsg) override;

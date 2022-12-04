@@ -9,15 +9,15 @@ int ClientHandler::clientCount_ = 0;
 
 ClientHandler::ClientHandler(const std::string& ip)
     : ip_(ip)
-    // TODO jaykay
-    , bHasSentDC_(false)
+	, player_(nullptr)
+    , bHasSentDisconnect_(false)
     , ping_(1000)
     , pingId_(1)
     , connectionState_(EConnectionState::JustConnected)
     , uniqueId_(0)
     , bPrintThreadId_(false)
 {
-    packetHandler_ = std::make_unique<PacketHandler>(this);
+    // TODO
     uniqueId_ = clientCount_++;
     pingStartTime_ = std::chrono::steady_clock::now();
 
@@ -31,4 +31,201 @@ ClientHandler::~ClientHandler()
     Log("Deleting client \"%d\" at %p", id_, static_cast<void*>(this));
 
     Log("ClientHandler at %p deleted", static_cast<void*>(this));
+}
+
+void ClientHandler::Destroy()
+{
+	if (connectionState_ == EConnectionState::LoggedOut)
+	{
+		// Already called.
+		LogError("%s: client %p, \"%d\" already destroyed.", __FUNCTION__,
+			static_cast<void*>(this), id_);
+		return;
+	}
+
+	Log("%s: destroying client %p, \"%d\" @ %s", __FUNCTION__, static_cast<void*>(this),
+		id_, ip_.c_str());
+
+	{
+		CSLock lock(csOutgoingData_);
+		tcpConn_->Shutdown();
+		tcpConn_.reset();
+	}
+}
+
+void ClientHandler::ServerTick(float delta)
+{
+	ProcessRecv();
+
+	// TODO ping-pong
+}
+
+void ClientHandler::WorldTick(float delta)
+{
+	if (IsLoggedOut())
+	{
+		return;
+	}
+
+	ProcessRecv();
+}
+
+void ClientHandler::SendData(const ContiguousByteViewContainer data)
+{
+	if (bHasSentDisconnect_)
+	{
+		return;
+	}
+	
+	// null check 와 send 사이에 리셋되는 것을 방지하기 위해 캡쳐.
+	if (auto conn = tcpConn_;  conn != nullptr)
+	{
+		CSLock lock(csOutgoingData_);
+		conn->Send(data.data(), data.size());
+	}
+}
+
+void ClientHandler::SendData(const void* data, size_t length)
+{
+	if (bHasSentDisconnect_)
+	{
+		return;
+	}
+
+	// null check 와 send 사이에 리셋되는 것을 방지하기 위해 캡쳐.
+	if (auto conn = tcpConn_;  conn != nullptr)
+	{
+		CSLock lock(csOutgoingData_);
+		conn->Send(data, length);
+	}
+}
+
+void ClientHandler::SendDisconnect(const std::string& reason)
+{
+	if (!bHasSentDisconnect_)
+	{
+		Log("Sending disconnect: \"%s\"", reason.c_str());
+		// TODO SendJsonPacket
+
+		bHasSentDisconnect_ = true;
+		Destroy();
+	}
+}
+
+void ClientHandler::PacketBufferFull()
+{
+	// Incoming queue 에 데이터가 너무 많은 경우 클라를 킥한다.
+	LogError("Incomming packet buffer full. Id: %d, IP: %s.", id_, ip_.c_str());
+	SendDisconnect("Server is busy.");
+}
+
+void ClientHandler::PacketUnknown(const std::string& packetData)
+{
+	LogError("Unknown packet type. Packet: %s, IP: %s", packetData.c_str(), ip_.c_str());
+
+	std::string reason = "Unknown packet type";
+
+	SendDisconnect(reason);
+}
+
+void ClientHandler::PacketError(int packetType, const std::string& errMsg)
+{
+	LogError("Packet processed with error. Packet type: %d, ErrMsg: %s", packetType,
+		errMsg.c_str());
+
+	// TODO 에러 종류에 따라 분기 처리.
+	SendDisconnect(errMsg);
+}
+
+void ClientHandler::OnHello()
+{
+	
+	CSLock lock(csConnctionState_);
+	if (connectionState_ != EConnectionState::JustConnected)
+	{
+		LogError("%s: Invalid connection state(%d)", __FUNCTION__,
+			connectionState_.load());
+		return;
+	}
+
+	connectionState_ = EConnectionState::KeysExchanged;
+	
+}
+
+void ClientHandler::OnLogin(bool bIsNewUser)
+{
+	CSLock lock(csConnctionState_);
+	if (connectionState_ != EConnectionState::KeysExchanged)
+	{
+		LogError("%s: Invalid connection state(%d)", __FUNCTION__,
+			connectionState_.load());
+		return;
+	}
+
+	// TODO
+
+	Json::Value bodyRoot;
+	bodyRoot["bIsNewUser"] = bIsNewUser;
+	// TODO packet hander 으로 이동.
+
+	// TODO jaykay
+
+	connectionState_ = EConnectionState::LoggingIn;
+}
+
+void ClientHandler::SocketClosed()
+{
+	Log("Socket Closed. Id: %d, IP: %s, (%p), state: %d, m_Player: %p", id_, ip_.c_str(),
+		static_cast<void*>(this), connectionState_.load(), static_cast<void*>(player_));
+
+	Destroy();
+}
+
+void ClientHandler::ProcessRecv()
+{
+	// TEMP
+	if (!bPrintThreadId_)
+	{
+		bPrintThreadId_ = true;
+		std::cout << "ClientHandler::ProcessRecv (auth+worlds) thread id: "
+			<< std::this_thread::get_id() << std::endl;
+	}
+
+	std::string incomingData;
+	{
+		CSLock lock(csIncomingData_);
+		std::swap(incomingData, incomingData_);
+	}
+
+	if (incomingData.empty())
+	{
+		return;
+	}
+
+	// TODO
+}
+
+void ClientHandler::OnConnCreated(std::shared_ptr<ITCPConnection> conn)
+{
+	tcpConn_ = conn;
+}
+
+void ClientHandler::OnReceivedData(const char* data, size_t length)
+{
+	CSLock lock(csIncomingData_);
+	incomingData_.append(data, length);
+}
+
+void ClientHandler::OnRemoteClosed()
+{
+	Log("Client socket closed. Id: %d, IP: @ %s", id_, ip_.c_str());
+	SocketClosed();
+}
+
+void ClientHandler::OnError(int errorCode, const std::string& errorMsg)
+{
+	LogError("ClientHandler::OnError. Id: %d, IP: %s, err code: %d, err msg: %s. Client "
+		"disconnected.",
+		id_, ip_.c_str(), errorCode, errorMsg.c_str());
+	SocketClosed();
 }

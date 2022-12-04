@@ -13,6 +13,7 @@ set(FOLDERS
 	util
 	osLib
 	packetHandler
+	actor
 )
 
 foreach(folder ${FOLDERS})

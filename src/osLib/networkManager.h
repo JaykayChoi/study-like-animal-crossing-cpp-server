@@ -27,6 +27,9 @@ public:
      * listenServers_ 에 server 를 추가한다.
      * 새 수신 서버가 작성 될 때 기본 서버 핸들 구현에서 사용된다.
      * 리스닝에 성공한 서버 만 추가된다.
+	 * TODO IListenServer * or & 으로 받는 것이 나을지 고민.
+	 * https://www.modernescpp.com/index.php/c-core-guidelines-passing-smart-pointer
+	 * https://stackoverflow.com/questions/3310737/should-we-pass-a-shared-ptr-by-reference-or-by-value
      */
     void AddListenServer(const std::shared_ptr<IListenServer>& server);
 
