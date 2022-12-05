@@ -18,6 +18,8 @@
 #include <string>
 #include <vector>
 
+#define USE_RDB
+
 #define VERIFY(x)                                                                        \
     if (!(x))                                                                            \
     {                                                                                    \

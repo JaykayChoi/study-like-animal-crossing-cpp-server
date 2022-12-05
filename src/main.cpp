@@ -1,5 +1,8 @@
 ﻿#include "global.h"
-#include <windows.h>
+#include "osLib/networkManager.h"
+#include "serverInstance.h"
+#include "tclap/CmdLine.h"
+// #include <windows.h>
 
 void AbortSignalHandler(int signal);
 static BOOL CtrlHandler(DWORD fdwCtrlType);
@@ -45,7 +48,7 @@ void AbortSignalHandler(int signal)
         return;
     case SIGINT:
     case SIGTERM:
-        // TODO jaykay
+        ServerInstance::Get().Stop();
         return;
     }
 }
@@ -53,19 +56,93 @@ void AbortSignalHandler(int signal)
 static BOOL CtrlHandler(DWORD fdwCtrlType)
 {
     LogError("CtrlHandler");
-    // TODO jaykay
 
+    ServerInstance::Get().Stop();
+
+    std::this_thread::sleep_for(std::chrono::seconds(10));
     return TRUE;
 }
 
 void ParseArguments(int argc, char** argv)
 {
-    // TODO jaykay
+    try
+    {
+        // TODO
+        /*
+        TCLAP::CmdLine cmd("Tutorial");
+        TCLAP::ValueArg<int> tcPort("p", "port", "The port number the server should listen
+        to", false, 23000, "port", cmd); cmd.parse(argc, argv);
+
+
+        int temp = tcPort.getValue();
+        LOG("port %d\n", temp);
+        */
+    }
+    catch (const TCLAP::ArgException& exc)
+    {
+        LogError("Parse args is failed. line: %s, arg: %s", exc.error().c_str(),
+            exc.argId().c_str());
+    }
 }
 
+/*
+NetworkManager::Initialize
+ServerInstance::Run
+
+Server::Init
+Server::Start
+
+Network::Listen
+
+ListenServer::Listen
+
+ListenServer::OnConnected
+
+TCPConnection::Enable
+TCPConnection::ReadCallback
+TCPConnection::ReceivedCleartextData
+ClientHandler::OnReceivedData
+*/
 int Start()
 {
-    // TODO jaykay
+    struct NetworkRAII
+    {
+        NetworkRAII() { NetworkManager::Get().Initialize(); }
+
+        ~NetworkRAII() { NetworkManager::Get().Terminate(); }
+    };
+
+    try
+    {
+        while (true)
+        {
+            NetworkRAII raii;
+
+            if (!ServerInstance::Get().Run())
+            {
+                break;
+            }
+        }
+
+        return EXIT_SUCCESS;
+    }
+    catch (const fmt::format_error& err)
+    {
+        std::cerr << "Main() exception: " << err.what() << '\n';
+    }
+    catch (const TCLAP::ArgException& err)
+    {
+        std::cerr << fmt::sprintf(
+            "Error reading command line {} for argument {}\n", err.error(), err.argId());
+    }
+    catch (const std::exception& err)
+    {
+        std::cerr << "Main() exception: " << err.what() << '\n';
+    }
+    catch (...)
+    {
+        std::cerr << "Unknown exception\n";
+    }
 
     return EXIT_FAILURE;
 }

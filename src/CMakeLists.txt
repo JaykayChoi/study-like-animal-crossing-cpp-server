@@ -14,6 +14,8 @@ set(FOLDERS
 	osLib
 	packetHandler
 	actor
+	sqlLib
+	sql
 )
 
 foreach(folder ${FOLDERS})

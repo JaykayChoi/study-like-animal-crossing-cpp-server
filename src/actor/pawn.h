@@ -4,5 +4,4 @@
 
 class Pawn : public Actor
 {
-
 };

@@ -4,7 +4,7 @@
 #include "tcpConnection.h"
 
 #ifdef TCP_CONN_EVENT_BASE_MULTI_THREAD
-// TODO jaykay config (TCPConnection::ReadCallback (per connection))
+// TODO config (TCPConnection::ReadCallback (per connection))
 const int MAX_TCP_CONN_EVENT_BASE_IO_THREAD_COUNT = 5;
 #endif
 

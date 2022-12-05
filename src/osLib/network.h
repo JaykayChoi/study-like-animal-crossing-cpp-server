@@ -11,6 +11,7 @@ class ITCPConnection
     friend class Network;
 
 public:
+    // ClientHandler 에서 상속 받아 사용하고 있다.
     class Callback
     {
     public:
@@ -99,7 +100,10 @@ public:
 class Network
 {
 public:
-    // 서버로 들어오는 연결을 수신 할 때 사용되는 콜백
+    /**
+     * 서버로 들어오는 연결을 수신 할 때 사용되는 콜백.
+     * server.cpp ServerListenCallback 에서 상속받아 사용하고 있다.
+     */
     class ListenCallback
     {
     public:

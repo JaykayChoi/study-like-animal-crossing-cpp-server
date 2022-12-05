@@ -1,9 +1,10 @@
 ﻿#pragma once
 
+#include "actor/player.h"
 #include "global.h"
 #include "osLib/criticalSection.h"
 #include "osLib/network.h"
-#include "actor/player.h"
+#include "sql/userDb.h"
 
 enum class EConnectionState : uint8
 {
@@ -67,10 +68,10 @@ public:
 
     void OnLogin(bool bIsNewUser);
 
-    // TODO jaykay
+    void OnEnterWorld(int seqNum, const UserDb::EnterWorldResult& ret);
 
 private:
-    // TODO jaykay
+    friend class Server;
 
     std::string ip_;
 
@@ -85,7 +86,7 @@ private:
     // Protects outgoing data.
     CriticalSection csOutgoingData_;
 
-	Player* player_;
+    Player* player_;
 
     // Disconnect packet 이 양방향으로 전송된 경우 true.
     bool bHasSentDisconnect_;
