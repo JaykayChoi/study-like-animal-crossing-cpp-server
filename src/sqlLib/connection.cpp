@@ -1,22 +1,21 @@
 ﻿#include "connection.h"
-#include "error.h"
 #include "../util/lacUtil.h"
+#include "error.h"
 
-lmysql::Connection::Connection(
-    const std::string &host,
-    const std::string &user,
-    const std::string &passwd,
-    const std::string &db,
-    unsigned int port,
-    unsigned long clientflag,
-    const std::map<mysql_option, std::string> &options)
-    : mysql_(nullptr), bIsFromPool_(false), poolPosition_(0), poolEntry_(nullptr)
+lmysql::Connection::Connection(const std::string& host, const std::string& user,
+    const std::string& passwd, const std::string& db, unsigned int port,
+    unsigned long clientflag, const std::map<mysql_option, std::string>& options)
+    : mysql_(nullptr)
+    , bIsFromPool_(false)
+    , poolPosition_(0)
+    , poolEntry_(nullptr)
 {
     Connect(host, user, passwd, db, port, clientflag, options);
 }
 
-lmysql::Connection::Connection(ConnPool &pool)
-    : bIsFromPool_(true), poolPosition_(0)
+lmysql::Connection::Connection(ConnPool& pool)
+    : bIsFromPool_(true)
+    , poolPosition_(0)
 {
     poolEntry_ = pool.GetPoolEntry(-1); // No timeout
     mysql_ = poolEntry_->GetConnection()->GetMysql();
@@ -34,18 +33,18 @@ lmysql::Connection::~Connection()
     }
 }
 
-std::vector<std::vector<char **>> lmysql::Connection::QueryProcedure(
-    const std::string &inQuery)
+std::vector<std::vector<char**>> lmysql::Connection::QueryProcedure(
+    const std::string& inQuery)
 {
-    std::cout << "Cllmysql::Connection::QueryProcedure thread id: " << std::this_thread::get_id() << std::endl;
+    std::cout << "Cllmysql::Connection::QueryProcedure thread id: "
+              << std::this_thread::get_id() << std::endl;
 
     std::string query = "call ";
     query.append(inQuery);
     return Query(query);
 }
 
-std::vector<std::vector<char **>> lmysql::Connection::Query(
-    const std::string &query)
+std::vector<std::vector<char**>> lmysql::Connection::Query(const std::string& query)
 {
     // https://dev.mysql.com/doc/c-api/8.0/en/c-api-multiple-queries.html
 
@@ -54,12 +53,10 @@ std::vector<std::vector<char **>> lmysql::Connection::Query(
         throw Error("Not connected.");
     }
 
-    std::vector<std::vector<char **>> ret;
+    std::vector<std::vector<char**>> ret;
 
     int status = mysql_real_query(
-        mysql_,
-        query.c_str(),
-        static_cast<unsigned long>(query.size()));
+        mysql_, query.c_str(), static_cast<unsigned long>(query.size()));
 
     if (status != 0)
     {
@@ -68,11 +65,11 @@ std::vector<std::vector<char **>> lmysql::Connection::Query(
 
     do
     {
-        MYSQL_RES *mysqlResult = mysql_store_result(mysql_);
+        MYSQL_RES* mysqlResult = mysql_store_result(mysql_);
 
         if (mysqlResult)
         {
-            std::vector<char **> rowRet;
+            std::vector<char**> rowRet;
             processResult(mysqlResult, rowRet);
             ret.push_back(rowRet);
             mysql_free_result(mysqlResult);
@@ -100,29 +97,15 @@ std::vector<std::vector<char **>> lmysql::Connection::Query(
     return ret;
 }
 
-void lmysql::Connection::Begin()
-{
-    Query("BEGIN");
-}
+void lmysql::Connection::Begin() { Query("BEGIN"); }
 
-void lmysql::Connection::Commit()
-{
-    Query("COMMIT");
-}
+void lmysql::Connection::Commit() { Query("COMMIT"); }
 
-void lmysql::Connection::Rollback()
-{
-    Query("ROLLBACK");
-}
+void lmysql::Connection::Rollback() { Query("ROLLBACK"); }
 
-void lmysql::Connection::Connect(
-    const std::string &host,
-    const std::string &user,
-    const std::string &passwd,
-    const std::string &db,
-    unsigned int port,
-    unsigned long clientflag,
-    const std::map<mysql_option, std::string> &options)
+void lmysql::Connection::Connect(const std::string& host, const std::string& user,
+    const std::string& passwd, const std::string& db, unsigned int port,
+    unsigned long clientflag, const std::map<mysql_option, std::string>& options)
 {
     mysql_ = mysql_init(nullptr);
     if (!mysql_)
@@ -130,7 +113,7 @@ void lmysql::Connection::Connect(
         throw Error("mysql_init is failed.");
     }
 
-    for (const auto &[key, value] : options)
+    for (const auto& [key, value] : options)
     {
         // TODO: value 필요한 다른 옵션들 처리.
         if (key == MYSQL_OPT_CONNECT_TIMEOUT)
@@ -150,18 +133,14 @@ void lmysql::Connection::Connect(
         }
     }
 
-    if (mysql_real_connect(
-            mysql_,
-            !host.empty() ? host.c_str() : nullptr,
+    if (mysql_real_connect(mysql_, !host.empty() ? host.c_str() : nullptr,
             !user.empty() ? user.c_str() : nullptr,
             !passwd.empty() ? passwd.c_str() : nullptr,
-            !db.empty() ? db.c_str() : nullptr,
-            port ? port : 0,
-            nullptr,
-            clientflag) == nullptr)
+            !db.empty() ? db.c_str() : nullptr, port ? port : 0, nullptr, clientflag)
+        == nullptr)
     {
         std::string errMsg = mysql_error(mysql_);
-        uint32 errNum = mysql_errno(mysql_);
+        unsigned int errNum = mysql_errno(mysql_);
         CleanUpConnection();
         throw Error(errMsg, errNum);
     }
@@ -178,7 +157,7 @@ void lmysql::Connection::CleanUpConnection()
 }
 
 void lmysql::Connection::processResult(
-    MYSQL_RES *mysqlResult, std::vector<char **> &outResult)
+    MYSQL_RES* mysqlResult, std::vector<char**>& outResult)
 {
     MYSQL_ROW row;
     unsigned int numFields;

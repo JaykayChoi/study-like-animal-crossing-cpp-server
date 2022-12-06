@@ -1,6 +1,6 @@
 ﻿#include "cphAuthLogin.h"
 #include "../../clientHandler.h"
-#include "../../serverManager.h"
+#include "../../serverInstance.h"
 #include "../../sql/authDb.h"
 #include "json/json.h"
 
@@ -25,7 +25,7 @@ void CphAuthLogin::Exec(
 
     int curTimeUtc = (int)std::time(0);
 
-    AuthDb* authDb = ServerManager::Get().GetAuthDb();
+    AuthDb* authDb = ServerInstance::Get().GetAuthDb();
 
     // TEMP
     if (!authDb)

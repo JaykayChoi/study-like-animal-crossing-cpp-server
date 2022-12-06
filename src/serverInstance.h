@@ -3,6 +3,9 @@
 #include "global.h"
 #include "server.h"
 
+class AuthDb;
+class UserDb;
+
 class ServerInstance
 {
 public:

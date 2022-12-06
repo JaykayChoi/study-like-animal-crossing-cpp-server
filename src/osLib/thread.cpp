@@ -55,7 +55,7 @@ bool Thread::Start()
 #ifdef _DEBUG
         if (!threadName_.empty())
         {
-            // SetThreadName(&thread_, threadName_.c_str());
+            SetThreadName(&thread_, threadName_.c_str());
         }
 #endif
 

@@ -1,4 +1,6 @@
 ﻿#include "serverInstance.h"
+#include "sql/authDb.h"
+#include "sql/userDb.h"
 
 ServerInstance::ServerInstance()
     : server_(nullptr)

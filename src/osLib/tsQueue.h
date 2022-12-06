@@ -46,7 +46,7 @@ public:
 
         for (iterator itr = contents_.begin(); itr != contents_.end(); itr++)
         {
-            if (*itr == item)
+            if ((*itr) == item)
             {
                 Funcs::Combine(*itr, item);
                 return;

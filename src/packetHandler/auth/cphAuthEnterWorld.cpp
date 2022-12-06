@@ -1,6 +1,6 @@
 ﻿#include "cphAuthEnterWorld.h"
 #include "../../clientHandler.h"
-#include "../../serverManager.h"
+#include "../../serverInstance.h"
 #include "../../sql/authDb.h"
 #include "../../sql/userDb.h"
 #include "json/json.h"
@@ -28,7 +28,7 @@ void CphAuthEnterWorld::Exec(
     // TODO auth server 분리하여 userId 얻어와야 됨. 임시로 여기서 직접 auth db 사용.
 
     // TODO worldId
-    AuthDb* authDb = ServerManager::Get().GetAuthDb();
+    AuthDb* authDb = ServerInstance::Get().GetAuthDb();
     AuthDb::EnterWorldResult authEnterWorldResult = authDb->EnterWorld(accountId, "1");
 
     if (!authEnterWorldResult.errMsg.empty())
@@ -37,7 +37,7 @@ void CphAuthEnterWorld::Exec(
     }
 
     int curTimeUtc = (int)std::time(0);
-    UserDb* userDb = ServerManager::Get().GetUserDb();
+    UserDb* userDb = ServerInstance::Get().GetUserDb();
     UserDb::EnterWorldResult userEnterWorldResult = userDb->EnterWorld(
         authEnterWorldResult.userId, authEnterWorldResult.pubId, curTimeUtc);
 

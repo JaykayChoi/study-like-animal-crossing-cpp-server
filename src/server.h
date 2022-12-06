@@ -25,7 +25,7 @@ public:
     void OnClientMovedToWorld(const ClientHandler* client);
 
 private:
-    friend class ServerManager;
+    friend class ServerInstance;
     friend class ServerListenCallback;
 
     class TickThread : public Thread

@@ -197,6 +197,17 @@ bool ListenServer::Listen(int port)
         return false;
     }
 
+    // Listen.
+    if (listen(sock, SOMAXCONN) != 0)
+    {
+        errorCode_ = EVUTIL_SOCKET_ERROR();
+        errorMsg_ = fmt::sprintf("Cannot listen on port %d: %d (%s)", port, errorCode_,
+            evutil_socket_error_to_string(errorCode_));
+        Log("%s", errorMsg_.c_str());
+        evutil_closesocket(sock);
+        return false;
+    }
+
     connListener_ = evconnlistener_new(NetworkManager::Get().GetEventBase(), OnConnected,
         this, LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE, 0, sock);
     bIsListening_ = true;

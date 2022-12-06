@@ -1,5 +1,7 @@
 ﻿#include "clientHandler.h"
 #include "packetHandler/packetHandler.h"
+#include "serverInstance.h"
+#include "world.h"
 #include "json/json.h"
 #include <chrono>
 
@@ -17,7 +19,7 @@ ClientHandler::ClientHandler(const std::string& ip)
     , uniqueId_(0)
     , bPrintThreadId_(false)
 {
-    // TODO
+    packetHandler_ = std::make_unique<PacketHandler>(this);
     uniqueId_ = clientCount_++;
     pingStartTime_ = std::chrono::steady_clock::now();
 
@@ -205,7 +207,7 @@ void ClientHandler::OnEnterWorld(int seqNum, const UserDb::EnterWorldResult& ret
     // Add to world.
     player_->Initialize(std::move(player), *world);
 
-    ServerManager::Get().GetServer()->OnClientMovedToWorld(this);
+    ServerInstance::Get().GetServer()->OnClientMovedToWorld(this);
     bPrintThreadId_ = false;
     world->Start();
 
@@ -244,7 +246,7 @@ void ClientHandler::ProcessRecv()
         return;
     }
 
-    // TODO
+    packetHandler_->ReadPayloads(incomingData);
 }
 
 void ClientHandler::OnConnCreated(std::shared_ptr<ITCPConnection> conn)
