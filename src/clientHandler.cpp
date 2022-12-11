@@ -17,7 +17,7 @@ ClientHandler::ClientHandler(const std::string& ip)
     , pingId_(1)
     , connectionState_(EConnectionState::JustConnected)
     , uniqueId_(0)
-    , bPrintThreadId_(false)
+    , bHasPrintTickThreadId_(false)
 {
     packetHandler_ = std::make_unique<PacketHandler>(this);
     uniqueId_ = clientCount_++;
@@ -72,7 +72,7 @@ void ClientHandler::WorldTick(float delta)
     ProcessRecv();
 }
 
-void ClientHandler::SendData(const ContiguousByteViewContainer data)
+void ClientHandler::SendData(const std::basic_string_view<std::byte> data)
 {
     if (bHasSentDisconnect_)
     {
@@ -208,7 +208,7 @@ void ClientHandler::OnEnterWorld(int seqNum, const UserDb::EnterWorldResult& ret
     player_->Initialize(std::move(player), *world);
 
     ServerInstance::Get().GetServer()->OnClientMovedToWorld(this);
-    bPrintThreadId_ = false;
+    bHasPrintTickThreadId_ = false;
     world->Start();
 
     {
@@ -228,11 +228,11 @@ void ClientHandler::SocketClosed()
 void ClientHandler::ProcessRecv()
 {
     // TEMP
-    if (!bPrintThreadId_)
+    if (!bHasPrintTickThreadId_)
     {
-        bPrintThreadId_ = true;
-        std::cout << "ClientHandler::ProcessRecv (auth+worlds) thread id: "
-                  << std::this_thread::get_id() << std::endl;
+        bHasPrintTickThreadId_ = true;
+        std::cout << "ClientHandler tick thread id: " << std::this_thread::get_id()
+                  << std::endl;
     }
 
     std::string incomingData;

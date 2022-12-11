@@ -22,7 +22,7 @@ PacketHandler::PacketHandler(ClientHandler* client)
 
 void PacketHandler::ReadPayloads(std::string& data)
 {
-    // Write the received data to recvBuffer_
+    // 받은 데이터를 recvBuffer_ 에 밀어넣는다.
     if (!recvBuffer_.Write(data.data(), data.size()))
     {
         // Queue 에 너무 많은 데이터가 들어온 경우.
@@ -108,7 +108,7 @@ void PacketHandler::SendJsonPacket(EPacketType packetType, int seqNum,
         payloadSize = encryptedSize;
     }
 
-    // If compressed, add uncompressed size of 4.
+    // 압축을 하는 경우 uncompressed size 를 넘겨주기 위해 4 추가.
     int packetSize = payloadSize;
     if ((uint8)payloadFlags & (uint8)EPayloadFlag::Compress)
     {
@@ -160,7 +160,7 @@ void PacketHandler::ProcessPayload()
 
         if (!recvBuffer_.CanReadBytes(packetSize))
         {
-            // The full packet hasn't been received yet
+            // 아직 전체 packet 을 받지 못 함.
             recvBuffer_.ResetRead();
             break;
         }
@@ -172,7 +172,7 @@ void PacketHandler::ProcessPayload()
         uint8* payloadPtr = recvPayloadBuffer_.data();
         int payloadSize = packetSize;
 
-        // Decrypt if necessary.
+        // Decrypt.
         if (payloadFlags & (uint8)EPayloadFlag::Encrypt)
         {
             int decryptedSize;
@@ -187,11 +187,13 @@ void PacketHandler::ProcessPayload()
             payloadSize = decryptedSize;
         }
 
-        // Uncompress if necessary.
+        // Uncompress.
         if (payloadFlags & (uint8)EPayloadFlag::Compress)
         {
-            // TODO uncompressedSize 사이즈를 최적화를 위해 클라에서 uncompressedSize
-            // 받아야 됨. this.SendJsonPacket 와 같이.
+            /**
+             * TODO uncompressedSize 사이즈를 최적화를 위해 클라에서 uncompressedSize
+               받아야 됨. this.SendJsonPacket 와 같이.
+             */
             int uncompressedSize = TEMP_BUF_SIZE;
             uncompressBuffer_.clear();
             uncompressBuffer_.reserve(uncompressedSize);

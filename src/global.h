@@ -52,7 +52,4 @@ typedef unsigned long long uint64;
     TypeName(const TypeName&) = delete;                                                  \
     TypeName& operator=(const TypeName&) = delete
 
-using ContiguousByteContainer = std::basic_string<std::byte>;
-using ContiguousByteViewContainer = std::basic_string_view<std::byte>;
-
 #define ARRAY_LENGTH(X) (sizeof(X) / sizeof(*(X)))

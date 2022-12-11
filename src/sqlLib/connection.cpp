@@ -36,9 +36,6 @@ lmysql::Connection::~Connection()
 std::vector<std::vector<char**>> lmysql::Connection::QueryProcedure(
     const std::string& inQuery)
 {
-    std::cout << "Cllmysql::Connection::QueryProcedure thread id: "
-              << std::this_thread::get_id() << std::endl;
-
     std::string query = "call ";
     query.append(inQuery);
     return Query(query);

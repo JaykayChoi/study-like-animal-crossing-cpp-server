@@ -64,7 +64,7 @@ void TCPConnection::Close()
 
 void TCPConnection::ReadCallback(bufferevent* bufferEvent, void* inSelf)
 {
-    std::cout << "TCPConnImpl::ReadCallback (per conn) thread id: "
+    std::cout << "TCPConnection::ReadCallback (per conn) thread id: "
               << std::this_thread::get_id() << std::endl;
 
     ASSERT(inSelf != nullptr);
@@ -99,107 +99,108 @@ void TCPConnection::EventCallback(bufferevent* bufferEvent, short what, void* in
 {
     ASSERT(inSelf != nullptr);
     std::shared_ptr<TCPConnection> self = static_cast<TCPConnection*>(inSelf)->selfPtr_;
-    
-	if (self == nullptr)
-	{
-		// 이미 해제된 상태.
-		return;
-	}
 
-	if (what && BEV_EVENT_ERROR)
-	{
-		// 연결을 기다리고 있는지 여부에 따라 호출할 콜백 선택.
-		int err = EVUTIL_SOCKET_ERROR();
-		
-		self->callback_->OnError(err, evutil_socket_error_to_string(err));
-		self->server_->RemoveConn(self.get());
-		self->selfPtr_.reset();
-		return;
-	}
+    if (self == nullptr)
+    {
+        // 이미 해제된 상태.
+        return;
+    }
 
-	// 연결이 종료된 경우 콜백을 호출하고 연결 제거.
-	if (what & BEV_EVENT_EOF)
-	{
-		self->callback_->OnRemoteClosed();
-		if (self->server_ != nullptr)
-		{
-			self->server_->RemoveConn(self.get());
-		}
+    if (what && BEV_EVENT_ERROR)
+    {
+        // 연결을 기다리고 있는지 여부에 따라 호출할 콜백 선택.
+        int err = EVUTIL_SOCKET_ERROR();
 
-		self->selfPtr_.reset();
-		return;
-	}
+        self->callback_->OnError(err, evutil_socket_error_to_string(err));
+        self->server_->RemoveConn(self.get());
+        self->selfPtr_.reset();
+        return;
+    }
 
-	// Unknown event.
-	LogWarn("%s: Unhandled LibEvent event %d (0x%x)", __FUNCTION__, what, what);
-	ASSERT(!"TCPConnection::EventCallback: Unhandled LibEvent event");
+    // 연결이 종료된 경우 콜백을 호출하고 연결 제거.
+    if (what & BEV_EVENT_EOF)
+    {
+        self->callback_->OnRemoteClosed();
+        if (self->server_ != nullptr)
+        {
+            self->server_->RemoveConn(self.get());
+        }
+
+        self->selfPtr_.reset();
+        return;
+    }
+
+    // Unknown event.
+    LogWarn("%s: Unhandled LibEvent event %d (0x%x)", __FUNCTION__, what, what);
+    ASSERT(!"TCPConnection::EventCallback: Unhandled LibEvent event");
 }
 
-void TCPConnection::UpdateAddress(const sockaddr* address, socklen_t addrLen, std::string& inIP, int& port)
+void TCPConnection::UpdateAddress(
+    const sockaddr* address, socklen_t addrLen, std::string& inIP, int& port)
 {
-	// Convert to IP.
-	char ip[128];
+    // Convert to IP.
+    char ip[128];
 
-	switch (address->sa_family)
-	{
-	case AF_INET: // IPv4:
-	{
-		const sockaddr_in* sin = reinterpret_cast<const sockaddr_in*>(address);
-		evutil_inet_ntop(AF_INET, &(sin->sin_addr), ip, sizeof(ip));
-		port = ntohs(sin->sin_port);
-		break;
-	}
-	case AF_INET6: // IPv6
-	{
-		const sockaddr_in6* sin = reinterpret_cast<const sockaddr_in6*>(address);
-		evutil_inet_ntop(AF_INET6, &(sin->sin6_addr), ip, sizeof(ip));
-		port = ntohs(sin->sin6_port);
-		break;
-	}
+    switch (address->sa_family)
+    {
+    case AF_INET: // IPv4:
+    {
+        const sockaddr_in* sin = reinterpret_cast<const sockaddr_in*>(address);
+        evutil_inet_ntop(AF_INET, &(sin->sin_addr), ip, sizeof(ip));
+        port = ntohs(sin->sin_port);
+        break;
+    }
+    case AF_INET6: // IPv6
+    {
+        const sockaddr_in6* sin = reinterpret_cast<const sockaddr_in6*>(address);
+        evutil_inet_ntop(AF_INET6, &(sin->sin6_addr), ip, sizeof(ip));
+        port = ntohs(sin->sin6_port);
+        break;
+    }
 
-	default:
-	{
-		LogWarn(
-			"%s: Unknown socket address family: %d", __FUNCTION__, address->sa_family);
-		ASSERT(!"Unknown socket address family");
-		break;
-	}
-	}
-	inIP.assign(ip);
+    default:
+    {
+        LogWarn(
+            "%s: Unknown socket address family: %d", __FUNCTION__, address->sa_family);
+        ASSERT(!"Unknown socket address family");
+        break;
+    }
+    }
+    inIP.assign(ip);
 }
 
 void TCPConnection::UpdateLocalAddress()
 {
-	sockaddr_storage sa;
-	socklen_t salen = static_cast<socklen_t>(sizeof(sa));
-	getsockname(
-		bufferevent_getfd(bufferEvent_), reinterpret_cast<sockaddr*>(&sa), &salen);
-	UpdateAddress(reinterpret_cast<const sockaddr*>(&sa), salen, localIP_, localPort_);
+    sockaddr_storage sa;
+    socklen_t salen = static_cast<socklen_t>(sizeof(sa));
+    getsockname(
+        bufferevent_getfd(bufferEvent_), reinterpret_cast<sockaddr*>(&sa), &salen);
+    UpdateAddress(reinterpret_cast<const sockaddr*>(&sa), salen, localIP_, localPort_);
 }
 
 void TCPConnection::UpdateRemoteAddress()
 {
-	sockaddr_storage sa;
-	socklen_t salen = static_cast<socklen_t>(sizeof(sa));
-	getpeername(
-		bufferevent_getfd(bufferEvent_), reinterpret_cast<sockaddr*>(&sa), &salen);
-	UpdateAddress(reinterpret_cast<const sockaddr*>(&sa), salen, remoteIP_, remotePort_);
+    sockaddr_storage sa;
+    socklen_t salen = static_cast<socklen_t>(sizeof(sa));
+    getpeername(
+        bufferevent_getfd(bufferEvent_), reinterpret_cast<sockaddr*>(&sa), &salen);
+    UpdateAddress(reinterpret_cast<const sockaddr*>(&sa), salen, remoteIP_, remotePort_);
 }
 
 void TCPConnection::DoActualShutdown()
 {
-	shutdown(bufferevent_getfd(bufferEvent_), SD_SEND);
+    shutdown(bufferevent_getfd(bufferEvent_), SD_SEND);
 
-	bufferevent_disable(bufferEvent_, EV_WRITE);
+    bufferevent_disable(bufferEvent_, EV_WRITE);
 }
 
 bool TCPConnection::SendRaw(const void* data, size_t length)
 {
-	return (bufferevent_write(bufferEvent_, data, length) == 0);
+    return (bufferevent_write(bufferEvent_, data, length) == 0);
 }
 
 void TCPConnection::OnReceivedData(const char* data, size_t length)
 {
-	ASSERT(callback_ != nullptr);
-	callback_->OnReceivedData(data, length);
+    ASSERT(callback_ != nullptr);
+    callback_->OnReceivedData(data, length);
 }

@@ -14,7 +14,7 @@ public:
 
     static ServerInstance& Get();
 
-    bool Run();
+    bool Start();
 
     void Stop();
 

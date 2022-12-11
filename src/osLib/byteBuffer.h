@@ -16,10 +16,10 @@ public:
     bool CanReadBytes(size_t count) const;
 
     // count 바이트를 읽는다. 성공하면 true 반환.
-    bool Read(ContiguousByteContainer& out, size_t count);
+    bool Read(std::basic_string<std::byte>& out, size_t count);
 
     // 사용 가능한 모든 데이터를 읽는다.
-    void ReadAll(ContiguousByteContainer& out);
+    void ReadAll(std::basic_string<std::byte>& out);
 
     bool ReadToUInt8Arr(std::vector<uint8>& out, size_t numBytes);
 

@@ -1,7 +1,8 @@
 ﻿#pragma once
 
+#include "../global.h"
 #include "connPool.h"
-#include "global.h"
+#include <mysql.h>
 
 namespace lmysql
 {

@@ -54,7 +54,7 @@ public:
             std::chrono::duration_cast<std::chrono::milliseconds>(ping_).count());
     }
 
-    void SendData(const ContiguousByteViewContainer data);
+    void SendData(const std::basic_string_view<std::byte> data);
     void SendData(const void* data, size_t length);
 
     void SendDisconnect(const std::string& reason);
@@ -113,7 +113,7 @@ private:
     std::shared_ptr<ITCPConnection> tcpConn_;
 
     // TEMP
-    bool bPrintThreadId_;
+    bool bHasPrintTickThreadId_;
 
     void SocketClosed();
 

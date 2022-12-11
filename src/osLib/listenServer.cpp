@@ -91,8 +91,8 @@ void ListenServer::Close()
 
 bool ListenServer::Listen(int port)
 {
-    // std::cout << "ListenServerImpl::Listen (single) thread id: " <<
-    // std::this_thread::get_id() << std::endl;
+    std::cout << "ListenServerImpl::Listen (main) thread id: "
+              << std::this_thread::get_id() << std::endl;
 
     // NetworkManager 가 초기화되어 있지 않을 경우 초기화.
     NetworkManager::Get();
@@ -218,8 +218,8 @@ bool ListenServer::Listen(int port)
 void ListenServer::OnConnected(evconnlistener* listener, evutil_socket_t socket,
     sockaddr* addr, int len, void* inSelf)
 {
-    // std::cout << "ListenServerImpl::OnConnected (single) thread id: "
-    //           << std::this_thread::get_id() << std::endl;
+    std::cout << "ListenServerImpl::OnConnected (single) thread id: "
+              << std::this_thread::get_id() << std::endl;
 
     ListenServer* self = static_cast<ListenServer*>(inSelf);
     ASSERT(self != nullptr);

@@ -87,20 +87,19 @@ void ParseArguments(int argc, char** argv)
 
 /*
 NetworkManager::Initialize
-ServerInstance::Run
+ServerInstance::Start
 
 Server::Init
 Server::Start
 
 Network::Listen
-
 ListenServer::Listen
 
 ListenServer::OnConnected
 
 TCPConnection::Enable
 TCPConnection::ReadCallback
-TCPConnection::ReceivedCleartextData
+TCPConnection::ReceivedData
 ClientHandler::OnReceivedData
 */
 int Start()
@@ -118,7 +117,7 @@ int Start()
         {
             NetworkRAII raii;
 
-            if (!ServerInstance::Get().Run())
+            if (!ServerInstance::Get().Start())
             {
                 break;
             }

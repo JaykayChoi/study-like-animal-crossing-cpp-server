@@ -13,10 +13,10 @@ public:
     // 스레드 시작.
     bool Start();
 
-    // bShouldTerminate_ 값을 true 로 변경하고 스레드가 종료 될 때까지 기다린다.
+    // bShouldTerminate_ 을 통해 종료를 기다린 후 종료시킨다.
     void Stop();
 
-    // bShouldTerminate_ 변경없이 스레드가 종료 될 때까지 기다린다.
+    // 스레드가 완료될 때까지 기다린다.
     bool Wait();
 
     // 이 메서드를 호출하는 스레드가 이 객체에 포함된 스레드인 경우 true 반환.
@@ -26,7 +26,9 @@ protected:
     // Thread entrypoint.
     virtual void Execute() = 0;
 
-    // true 일 경우 종료시켜야 됨.
+	/**
+	 * override 된 Execute 에서는 bShouldTerminate_ 을 주기적으로 확인하여 true 일 경우 종료시켜야 됨.
+	 */
     std::atomic<bool> bShouldTerminate_;
 
 private:

@@ -80,7 +80,6 @@ private:
 
     std::map<EPacketType, IClientPacketHandler*> packetHandlers_;
 
-    // Crypto context.
     CryptoContext cryptoContext_;
 
     void ProcessPayload();

@@ -73,7 +73,7 @@ bool ByteBuffer::CanReadBytes(size_t count) const
     return count <= GetReadableSpace();
 }
 
-bool ByteBuffer::Read(ContiguousByteContainer& out, size_t count)
+bool ByteBuffer::Read(std::basic_string<std::byte>& out, size_t count)
 {
     CheckValid();
     if (!CanReadBytes(count))
@@ -105,7 +105,7 @@ bool ByteBuffer::Read(ContiguousByteContainer& out, size_t count)
     return true;
 }
 
-void ByteBuffer::ReadAll(ContiguousByteContainer& data)
+void ByteBuffer::ReadAll(std::basic_string<std::byte>& data)
 {
     CheckValid();
     Read(data, GetReadableSpace());

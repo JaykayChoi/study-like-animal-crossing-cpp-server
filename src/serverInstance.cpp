@@ -18,7 +18,7 @@ ServerInstance& ServerInstance::Get()
     return instance;
 }
 
-bool ServerInstance::Run()
+bool ServerInstance::Start()
 {
     auto beginTime = std::chrono::steady_clock::now();
     Log("Creating new server instance...");
