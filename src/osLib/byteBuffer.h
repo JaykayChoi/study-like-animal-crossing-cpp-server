@@ -10,13 +10,13 @@ public:
     ~ByteBuffer();
 
     // Ringbuffer 에 inBytes 를 쓴다. 성공 시 true 반환.
-    bool Write(const void* inBytes, size_t count);
+    bool Write(const void* inBytes, size_t size);
 
-    // count 바이트를 읽을 수 있는 경우 true 반환.
-    bool CanReadBytes(size_t count) const;
+    // size 바이트를 읽을 수 있는 경우 true 반환.
+    bool CanReadBytes(size_t size) const;
 
-    // count 바이트를 읽는다. 성공하면 true 반환.
-    bool Read(std::basic_string<std::byte>& out, size_t count);
+    // size 바이트를 읽는다. 성공하면 true 반환.
+    bool Read(std::basic_string<std::byte>& out, size_t size);
 
     // 사용 가능한 모든 데이터를 읽는다.
     void ReadAll(std::basic_string<std::byte>& out);
@@ -54,9 +54,9 @@ protected:
     // 현재 읽을 수 있는 바이트수 반환.
     size_t GetReadableSpace() const;
 
-    // count 바이트를 쓸 수 있는 경우 true 반환.
-    bool CanWriteBytes(size_t count) const;
+    // size 바이트를 쓸 수 있는 경우 true 반환.
+    bool CanWriteBytes(size_t size) const;
 
-    // count 바이트를 buffer 로 읽는다. 성공하면 true 반환.
-    bool ReadBuffer(void* out, size_t count);
+    // size 바이트를 buffer 로 읽는다. 성공하면 true 반환.
+    bool ReadBuffer(void* out, size_t size);
 };

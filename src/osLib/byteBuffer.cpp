@@ -20,7 +20,7 @@ ByteBuffer::~ByteBuffer()
     buffer_ = nullptr;
 }
 
-bool ByteBuffer::Write(const void* inBytes, size_t count)
+bool ByteBuffer::Write(const void* inBytes, size_t size)
 {
     CheckValid();
 
@@ -31,7 +31,7 @@ bool ByteBuffer::Write(const void* inBytes, size_t count)
 #endif
     size_t writtenBytes = 0;
 
-    if (curFreeSpace < count)
+    if (curFreeSpace < size)
     {
         return false;
     }
@@ -39,24 +39,24 @@ bool ByteBuffer::Write(const void* inBytes, size_t count)
     ASSERT(bufferSize_ >= writePos_);
     size_t untillEnd = bufferSize_ - writePos_;
     const char* bytes = static_cast<const char*>(inBytes);
-    if (untillEnd <= count)
+    if (untillEnd <= size)
     {
         // 끝까지 쓰고 writePos_ 을 0으로 옮긴다.
         if (untillEnd > 0)
         {
             memcpy(buffer_ + writePos_, bytes, untillEnd);
             bytes += untillEnd;
-            count -= untillEnd;
+            size -= untillEnd;
             writtenBytes = untillEnd;
         }
         writePos_ = 0;
     }
 
-    if (count > 0)
+    if (size > 0)
     {
-        memcpy(buffer_ + writePos_, bytes, count);
-        writePos_ += count;
-        writtenBytes += count;
+        memcpy(buffer_ + writePos_, bytes, size);
+        writePos_ += size;
+        writtenBytes += size;
     }
 
     ASSERT(GetBufferFreeSpace() == curFreeSpace - writtenBytes);
@@ -67,40 +67,40 @@ bool ByteBuffer::Write(const void* inBytes, size_t count)
     return true;
 }
 
-bool ByteBuffer::CanReadBytes(size_t count) const
+bool ByteBuffer::CanReadBytes(size_t size) const
 {
     CheckValid();
-    return count <= GetReadableSpace();
+    return size <= GetReadableSpace();
 }
 
-bool ByteBuffer::Read(std::basic_string<std::byte>& out, size_t count)
+bool ByteBuffer::Read(std::basic_string<std::byte>& out, size_t size)
 {
     CheckValid();
-    if (!CanReadBytes(count))
+    if (!CanReadBytes(size))
     {
         return false;
     }
 
     out.clear();
-    out.reserve(count);
+    out.reserve(size);
     ASSERT(bufferSize_ >= readPos_);
     size_t bytesToEndOfBuffer = bufferSize_ - readPos_;
-    if (bytesToEndOfBuffer <= count)
+    if (bytesToEndOfBuffer <= size)
     {
         // Ringbuffer 의 끝까지 읽고 readPos_ 을 0으로 옮긴다.
         if (bytesToEndOfBuffer > 0)
         {
             out.assign(buffer_ + readPos_, bytesToEndOfBuffer);
-            ASSERT(count >= bytesToEndOfBuffer);
-            count -= bytesToEndOfBuffer;
+            ASSERT(size >= bytesToEndOfBuffer);
+            size -= bytesToEndOfBuffer;
         }
         readPos_ = 0;
     }
 
-    if (count > 0)
+    if (size > 0)
     {
-        out.append(buffer_ + readPos_, count);
-        readPos_ += count;
+        out.append(buffer_ + readPos_, size);
+        readPos_ += size;
     }
     return true;
 }
@@ -225,16 +225,16 @@ size_t ByteBuffer::GetReadableSpace() const
     return writePos_ - readPos_;
 }
 
-bool ByteBuffer::CanWriteBytes(size_t count) const
+bool ByteBuffer::CanWriteBytes(size_t size) const
 {
     CheckValid();
-    return count <= GetBufferFreeSpace();
+    return size <= GetBufferFreeSpace();
 }
 
-bool ByteBuffer::ReadBuffer(void* out, size_t count)
+bool ByteBuffer::ReadBuffer(void* out, size_t size)
 {
     CheckValid();
-    if (!CanReadBytes(count))
+    if (!CanReadBytes(size))
     {
         return false;
     }
@@ -243,22 +243,22 @@ bool ByteBuffer::ReadBuffer(void* out, size_t count)
 
     char* dst = static_cast<char*>(out);
     size_t bytesToEndOfBuffer = bufferSize_ - readPos_;
-    if (bytesToEndOfBuffer <= count)
+    if (bytesToEndOfBuffer <= size)
     {
         // Ringbuffer 의 끝까지 읽고 readPos_ 을 0으로 옮긴다.
         if (bytesToEndOfBuffer > 0)
         {
             memcpy(dst, buffer_ + readPos_, bytesToEndOfBuffer);
             dst += bytesToEndOfBuffer;
-            count -= bytesToEndOfBuffer;
+            size -= bytesToEndOfBuffer;
         }
         readPos_ = 0;
     }
 
-    if (count > 0)
+    if (size > 0)
     {
-        memcpy(dst, buffer_ + readPos_, count);
-        readPos_ += count;
+        memcpy(dst, buffer_ + readPos_, size);
+        readPos_ += size;
     }
     return true;
 }

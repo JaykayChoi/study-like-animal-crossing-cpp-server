@@ -3,7 +3,6 @@
 #include "../global.h"
 #include "criticalSection.h"
 #include "network.h"
-#include "tsQueue.h"
 #include <event2/listener.h>
 
 // TEMP
