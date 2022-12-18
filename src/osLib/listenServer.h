@@ -4,6 +4,7 @@
 #include "criticalSection.h"
 #include "network.h"
 #include <event2/listener.h>
+#include "wEvent.h"
 
 // TEMP
 #define TCP_CONN_EVENT_BASE_MULTI_THREAD
