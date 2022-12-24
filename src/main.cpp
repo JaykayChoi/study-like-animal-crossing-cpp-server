@@ -2,7 +2,6 @@
 #include "osLib/networkManager.h"
 #include "serverInstance.h"
 #include "tclap/CmdLine.h"
-// #include <windows.h>
 
 void AbortSignalHandler(int signal);
 static BOOL CtrlHandler(DWORD fdwCtrlType);

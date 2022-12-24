@@ -20,7 +20,10 @@ ClientHandler::ClientHandler(const std::string& ip)
     , bHasPrintTickThreadId_(false)
 {
     packetHandler_ = std::make_unique<PacketHandler>(this);
+
+    // ClientHandler 는 같은 thread 에서 항상 생성되기 때문에 CS 로 보호하지 않는다.
     uniqueId_ = clientCount_++;
+
     pingStartTime_ = std::chrono::steady_clock::now();
 
     Log("New ClientHandler created at %p", static_cast<void*>(this));
@@ -231,8 +234,8 @@ void ClientHandler::ProcessRecv()
     if (!bHasPrintTickThreadId_)
     {
         bHasPrintTickThreadId_ = true;
-        std::cout << "ClientHandler tick thread id: " << std::this_thread::get_id()
-                  << std::endl;
+        std::cout << "ClientHandler tick (tickThread) thread id: "
+                  << std::this_thread::get_id() << std::endl;
     }
 
     std::string incomingData;

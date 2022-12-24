@@ -264,6 +264,7 @@ void ListenServer::OnConnected(evconnlistener* listener, evutil_socket_t socket,
 #else
     event_base* eventBase = NetworkManager::Get().GetEventBase();
 #endif
+
     std::shared_ptr<TCPConnection> conn = std::make_shared<TCPConnection>(socket,
         clientHandler, eventBase, self->selfPtr_, addr, static_cast<socklen_t>(len));
     {

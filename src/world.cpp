@@ -51,7 +51,7 @@ void World::Stop() { tickThread_.Stop(); }
 void World::AddActor(std::unique_ptr<Actor> actor)
 {
     CSLock lock(csActors_);
-    actors_.emplace_back(std::move(actor));
+    actors_.push_back(std::move(actor));
 }
 
 void World::Tick(float delta)
