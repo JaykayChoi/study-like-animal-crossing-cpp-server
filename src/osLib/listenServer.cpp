@@ -324,6 +324,6 @@ void ListenServer::TCPConnEventLoopCallback(
 {
     auto selfListenSever = static_cast<ListenServer*>(self);
     ASSERT(selfListenSever != nullptr);
-    selfListenSever->startupTCPConnEvent_.Set();
+    selfListenSever->startupTCPConnEvent_.Notify();
 }
 #endif

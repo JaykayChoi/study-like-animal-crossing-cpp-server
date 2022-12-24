@@ -12,21 +12,21 @@ void CriticalSection::Lock()
 {
     mutex_.lock();
 
-    recursionCount_ += 1;
-    owningThreadId_ = std::this_thread::get_id();
+    recursionCount_++;
+    ownerThreadId_ = std::this_thread::get_id();
 }
 
 void CriticalSection::Unlock()
 {
     ASSERT(IsLockedByCurThread());
-    recursionCount_ -= 1;
+    recursionCount_--;
 
     mutex_.unlock();
 }
 
 bool CriticalSection::IsLockedByCurThread()
 {
-    return ((recursionCount_ > 0) && (owningThreadId_ == std::this_thread::get_id()));
+    return ((recursionCount_ > 0) && (ownerThreadId_ == std::this_thread::get_id()));
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

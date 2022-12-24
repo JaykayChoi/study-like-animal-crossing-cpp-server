@@ -155,5 +155,5 @@ void NetworkManager::EventLoopCallback(evutil_socket_t socket, short events, voi
 {
     auto self = static_cast<NetworkManager*>(inSelf);
     ASSERT(self != nullptr);
-    self->startupEvent_.Set();
+    self->startupEvent_.Notify();
 }

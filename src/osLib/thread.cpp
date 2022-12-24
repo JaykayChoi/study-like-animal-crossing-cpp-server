@@ -60,7 +60,7 @@ bool Thread::Start()
 #endif
 
         // 스레드 시작이 완료되었다는 것을 노티.
-        eventStart_.Set();
+        eventStart_.Notify();
 
         return true;
     }

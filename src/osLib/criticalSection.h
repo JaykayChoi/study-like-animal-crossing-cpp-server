@@ -28,7 +28,7 @@ private:
      * 현재 CriticalSection 를 보유하고 있는 스레드의 id
      * 잠긴 경우에만 유효함. 언락되면 쓰레기값.
      */
-    std::thread::id owningThreadId_;
+    std::thread::id ownerThreadId_;
 
     std::recursive_mutex mutex_;
 };

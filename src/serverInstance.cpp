@@ -90,5 +90,5 @@ void ServerInstance::ChangeState(ENextState newState)
         return;
     }
 
-    stopEvent_.Set();
+    stopEvent_.Notify();
 }

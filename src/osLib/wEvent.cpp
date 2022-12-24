@@ -31,7 +31,7 @@ bool WEvent::Wait(uint32 timeoutMSec)
     return result;
 }
 
-void WEvent::Set()
+void WEvent::Notify()
 {
     {
         std::unique_lock<std::mutex> lock(mutex_);
@@ -42,7 +42,7 @@ void WEvent::Set()
     condVar_.notify_one();
 }
 
-void WEvent::SetAll()
+void WEvent::NotifyAll()
 {
     {
         std::unique_lock<std::mutex> lock(mutex_);
