@@ -1,5 +1,6 @@
 ﻿#include "actor.h"
 #include "../world.h"
+#include "../clientHandler.h"
 
 Actor::Actor()
     : world_(nullptr)
@@ -24,7 +25,7 @@ void Actor::BroadcastMovement(const ClientHandler* exclude)
 {
     // TODO
 
-    world_.BroadcastActorPosition(*this, exclude);
+    world_->BroadcastActorPosition(*this, exclude);
 }
 
 void Actor::SetPosition(double inX, double inY, double inZ)

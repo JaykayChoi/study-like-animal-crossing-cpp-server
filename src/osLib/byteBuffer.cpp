@@ -199,7 +199,7 @@ bool ByteBuffer::ReadInt32LE(int& out)
     return true;
 }
 
-bool ByteBuffer::WriteLEInt32(int value)
+bool ByteBuffer::WriteInt32LE(int value)
 {
     CheckValid();
 #ifdef IS_LITTLE_ENDIAN

@@ -18,7 +18,7 @@ void Player::Tick(float delta)
     BroadcastMovement(clientHandler_.get());
 }
 
-void Player::BroadcastMovement(const ClientHandle* exclude)
+void Player::BroadcastMovement(const ClientHandler* exclude)
 {
     // TODO player 특성 처리.
 

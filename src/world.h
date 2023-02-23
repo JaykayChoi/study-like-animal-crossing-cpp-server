@@ -5,6 +5,7 @@
 #include "osLib/thread.h"
 
 class Actor;
+class ClientHandler;
 
 class World
 {

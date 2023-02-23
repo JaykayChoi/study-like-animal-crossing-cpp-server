@@ -17,7 +17,6 @@ lmysql::ConnPool::ConnPool(std::size_t poolSize, const std::string& host,
     connections_.resize(poolSize);
     for (std::size_t i = 0; i != poolSize; i++)
     {
-        // TODO 연결 속도 올리기.
         connections_[i]
             = new PoolEntry(this, i, host, user, passwd, db, port, clientflag, options);
     }

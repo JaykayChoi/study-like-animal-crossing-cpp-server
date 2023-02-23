@@ -4,6 +4,7 @@
 #include "../util/vector3.h"
 
 class World;
+class ClientHandler;
 
 class Actor
 {
@@ -19,7 +20,7 @@ public:
 
     virtual void BroadcastMovement(const ClientHandler* exclude = nullptr);
 
-    const Vector3& GetPosition() const { return position_; }
+    const Vector3<double>& GetPosition() const { return position_; }
 
     void SetPosition(double inX, double inY, double inZ);
 

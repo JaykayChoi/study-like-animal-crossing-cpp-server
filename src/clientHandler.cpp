@@ -1,6 +1,7 @@
 ﻿#include "clientHandler.h"
 #include "packetHandler/packetHandler.h"
 #include "serverInstance.h"
+#include "util/vector3.h"
 #include "world.h"
 #include "json/json.h"
 #include <chrono>
@@ -224,7 +225,7 @@ void ClientHandler::HandleTownMove(int x, int y, int z, int degrees, int speed)
 {
     // TODO 이전 좌표와 비교하여 같을 경우 return
     Vector3<double> newPos(x, y, z);
-    Vector3<double> oldPos = player_.GetPosition();
+    Vector3<double> oldPos = player_->GetPosition();
 
     // TODO actor 에 SetPosition 만들기.
     // player_->SetPosition(x, y, z);
