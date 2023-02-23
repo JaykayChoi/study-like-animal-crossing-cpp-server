@@ -1,6 +1,16 @@
 ﻿#include "byteBuffer.h"
 #include <winsock2.h>
 
+#if (defined(__i386__) || defined(__alpha__) || defined(__ia64) || defined(__ia64__)     \
+    || defined(_M_IX86) || defined(_M_IA64) || defined(_M_ALPHA) || defined(__amd64)     \
+    || defined(__amd64__) || defined(_M_AMD64) || defined(__x86_64)                      \
+    || defined(__x86_64__) || defined(_M_X64) || defined(__bfin__) || defined(__ARMEL__) \
+    || (defined(_WIN32) && defined(__ARM__) && defined(_MSC_VER)))
+#define IS_LITTLE_ENDIAN
+#else
+#define IS_BIG_ENDIAN
+#endif
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // ByteBuffer
 
@@ -163,6 +173,11 @@ bool ByteBuffer::ReadUInt32LE(uint32& out)
 
     ReadBuffer(&out, 4);
 
+#ifdef IS_BIG_ENDIAN
+    out = ((out >> 24) & 0xff) | ((out >> 16) & 0xff00) | ((out >> 8) & 0xff0000)
+        | (out & 0xff000000);
+#endif
+
     return true;
 }
 
@@ -176,7 +191,24 @@ bool ByteBuffer::ReadInt32LE(int& out)
 
     ReadBuffer(&out, 4);
 
+#ifdef IS_BIG_ENDIAN
+    out = ((out >> 24) & 0xff) | ((out >> 16) & 0xff00) | ((out >> 8) & 0xff0000)
+        | (out & 0xff000000);
+#endif
+
     return true;
+}
+
+bool ByteBuffer::WriteLEInt32(int value)
+{
+    CheckValid();
+#ifdef IS_LITTLE_ENDIAN
+    return Write((const char*)&value, 4);
+#else
+    int v = ((value >> 24) & 0xff) | ((value >> 16) & 0xff00) | ((value >> 8) & 0xff0000)
+        | (value & 0xff000000);
+    return Write((const char*)&v, 4);
+#endif
 }
 
 void ByteBuffer::CommitRead()

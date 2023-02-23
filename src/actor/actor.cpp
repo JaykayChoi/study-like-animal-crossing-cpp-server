@@ -19,3 +19,19 @@ void Actor::Tick(float delta)
 {
     // TODO
 }
+
+void Actor::BroadcastMovement(const ClientHandler* exclude)
+{
+    // TODO
+
+    world_.BroadcastActorPosition(*this, exclude);
+}
+
+void Actor::SetPosition(double inX, double inY, double inZ)
+{
+    lastPosition_ = position_;
+
+    // TODO clamp
+
+    position_ = { inX, inY, inZ };
+}

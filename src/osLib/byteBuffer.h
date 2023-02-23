@@ -31,6 +31,8 @@ public:
 
     bool ReadInt32LE(int& out);
 
+    bool WriteInt32LE(int value);
+
     // 읽은 바이트를 제거.
     void CommitRead();
 

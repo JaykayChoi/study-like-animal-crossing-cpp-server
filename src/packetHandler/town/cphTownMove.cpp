@@ -16,4 +16,10 @@ void CphTownMove::Exec(
     // TODO
 
     int x = bodyRoot.get("x", "").asInt();
+    int y = bodyRoot.get("y", "").asInt();
+    int z = bodyRoot.get("z", "").asInt();
+    int degrees = bodyRoot.get("degrees", "").asInt();
+    int speed = bodyRoot.get("speed", "").asInt();
+
+    client->HandleTownMove(x, y, z, degrees, speed);
 }

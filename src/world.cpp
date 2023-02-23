@@ -54,6 +54,12 @@ void World::AddActor(std::unique_ptr<Actor> actor)
     actors_.push_back(std::move(actor));
 }
 
+void World::AddClientHandler(ClientHandler* client)
+{
+    CSLock lock(csClients_);
+    clientHandlers_.push_back(client);
+}
+
 void World::Tick(float delta)
 {
     for (const auto& actor : actors_)
@@ -61,4 +67,47 @@ void World::Tick(float delta)
         // TODO tick 필요한 액터 구분 필요.
         actor->Tick(delta);
     }
+}
+
+void World::BroadcastActorPosition(const Actor& actor, const ClientHandler* exclude)
+{
+    CSLock lock(csClients_);
+    for (const ClientHandler* client : clientHandlers_)
+    {
+        if (Client == exclude)
+        {
+            continue;
+        }
+
+        // TODO
+
+        std::vector<uint8> buf = BuildTownMovePacketBuffer(actor);
+        client->SendActorPosition(buf);
+    }
+}
+
+std::vector<uint8> World::BuildTownMovePacketBuffer(const Actor& actor)
+{
+    ByteBuffer buf(32); // HEADER(4) + INT(4) * type,x,y,z,degrees,spped(7) = 32
+    uint8 firstByte = (uint8)((bufBodySize & 0xFF00) >> 8);
+    uint8 secondByte = (uint8)(bufBodySize & 0x00FF);
+    uint8 flag = (uint8)EPayloadFlag::Binary;
+    uint8 zero = 0;
+    buf.Write(&firstByte, 1);
+    buf.Write(&secondByte, 1);
+    buf.Write(&flag, 1);
+    buf.Write(&zero, 1);
+
+    buf.WriteInt32LE((int)EPacketType::TOWN_ACTOR_MOVE_SC);
+    buf.WriteInt32LE(0); // TODO player인 경우 userId 넣어줘야 됨.
+
+    Vector3<double> pos = actor.GetPosition();
+    buf.WriteInt32LE(pos.x);
+    buf.WriteInt32LE(pos.y);
+    buf.WriteInt32LE(pos.z);
+    // TODO degrees, spped
+    buf.WriteInt32LE(0);
+    buf.WriteInt32LE(0);
+
+    return buf;
 }

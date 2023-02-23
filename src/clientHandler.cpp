@@ -220,6 +220,23 @@ void ClientHandler::OnEnterWorld(int seqNum, const UserDb::EnterWorldResult& ret
     }
 }
 
+void ClientHandler::HandleTownMove(int x, int y, int z, int degrees, int speed)
+{
+    // TODO 이전 좌표와 비교하여 같을 경우 return
+    Vector3<double> newPos(x, y, z);
+    Vector3<double> oldPos = player_.GetPosition();
+
+    // TODO actor 에 SetPosition 만들기.
+    // player_->SetPosition(x, y, z);
+
+    // TODO degrees ,spped 처리
+}
+
+void ClientHandler::SendActorPosition(std::vector<uint8> bufBody)
+{
+    packetHandler_->SendBinaryPacketIncludedHeader(bufBody);
+}
+
 void ClientHandler::SocketClosed()
 {
     Log("Socket Closed. Id: %d, IP: %s, (%p), state: %d, m_Player: %p", id_, ip_.c_str(),

@@ -141,6 +141,35 @@ void PacketHandler::SendJsonPacket(EPacketType packetType, int seqNum,
     client_->SendData(sendBuffer_.data(), sendBuffer_.size());
 }
 
+void PacketHandler::SendBinaryPacket(std::vector<uint8> bufBody)
+{
+    sendBuffer_.clear();
+    size_t bufBodySize = bufBody.size();
+    sendBuffer_.reserve(bufBodySize + HEADER_LEN);
+
+    uint8 firstByte = (uint8)((bufBodySize & 0xFF00) >> 8);
+    uint8 secondByte = (uint8)(bufBodySize & 0x00FF);
+
+    sendBuffer_.push_back(firstByte);
+    sendBuffer_.push_back(secondByte);
+    sendBuffer_.push_back((uint8)EPayloadFlag::Binary);
+    sendBuffer_.push_back(0);
+
+    uint8* bufBodyPtr = bufBody.data();
+    sendBuffer_.insert(std::end(sendBuffer_), bufBodyPtr, bufBodyPtr + bufBodySize);
+
+    client_->SendData(sendBuffer_.data(), sendBuffer_.size());
+}
+
+void PacketHandler::SendBinaryPacketIncludedHeader(std::vector<uint8> bufBody)
+{
+    sendBuffer_.clear();
+    uint8* bufBodyPtr = bufBody.data();
+    sendBuffer_.insert(std::end(sendBuffer_), bufBodyPtr, bufBodyPtr + bufBody.size());
+
+    client_->SendData(sendBuffer_.data(), sendBuffer_.size());
+}
+
 void PacketHandler::ProcessPayload()
 {
     for (;;)
@@ -243,13 +272,15 @@ void PacketHandler::ProcessBinaryPacket(ByteBuffer& buffer)
 void PacketHandler::ProcessTownMoveBinaryPacket(ByteBuffer& buffer)
 {
     Json::Value bodyRoot;
-    int x, y, degrees, speed;
+    int x, y, z, degrees, speed;
     buffer.ReadInt32LE(x);
     buffer.ReadInt32LE(y);
+    buffer.ReadInt32LE(z);
     buffer.ReadInt32LE(degrees);
     buffer.ReadInt32LE(speed);
     bodyRoot["x"] = x;
     bodyRoot["y"] = y;
+    bodyRoot["z"] = z;
     bodyRoot["degrees"] = degrees;
     bodyRoot["speed"] = speed;
 

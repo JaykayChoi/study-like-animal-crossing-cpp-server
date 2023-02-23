@@ -21,11 +21,9 @@ ServerInstance& ServerInstance::Get()
 bool ServerInstance::Start()
 {
     auto beginTime = std::chrono::steady_clock::now();
-    Log("Creating new server instance...");
-    server_ = new Server();
+    Log("Creating server instance...");
 
     Log("Initializing db connection pool...");
-
 #ifdef USE_RDB
     // TODO config
     std::map<mysql_option, std::string> options;
@@ -44,7 +42,7 @@ bool ServerInstance::Start()
 #endif
 
     Log("Initializing server...");
-
+    server_ = new Server();
     if (!server_->Init())
     {
         throw std::runtime_error("Failed to start server.");

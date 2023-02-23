@@ -26,6 +26,7 @@ enum class EPacketType : uint32
     TOWN_ENTER = 2001,
     TOWN_LOAD_COMPLETE = 2002,
     TOWN_MOVE_CS = 2003,
+    TOWN_ACTOR_MOVE_SC = 2004,
 
     // Dev
     DEV_SET_POINT = 9001,
@@ -57,6 +58,11 @@ public:
     void SendJsonPacket(EPacketType packetType, int seqNum, const Json::Value& bodyRoot,
         const EPayloadFlag payloadFlags
         = (EPayloadFlag)((uint8)EPayloadFlag::Encrypt | (uint8)EPayloadFlag::Compress));
+
+    void SendBinaryPacket(std::vector<uint8> bufBody);
+
+    // bufBody 에 헤더가 포함되어 있다.
+    void SendBinaryPacketIncludedHeader(std::vector<uint8> bufBody);
 
     // For client packet handler.
     ClientHandler* GetClientHandler() { return client_; }

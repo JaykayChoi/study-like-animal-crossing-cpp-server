@@ -41,14 +41,11 @@ public:
     // 월드 입장 후 tick
     void WorldTick(float delta);
 
-    inline bool IsLoggedIn() const
-    {
-        return connectionState_ >= EConnectionState::LoggedIn;
-    }
+    bool IsLoggedIn() const { return connectionState_ >= EConnectionState::LoggedIn; }
 
     bool IsLoggedOut() const { return (connectionState_ == EConnectionState::LoggedOut); }
 
-    inline short GetPing() const
+    short GetPing() const
     {
         return static_cast<short>(
             std::chrono::duration_cast<std::chrono::milliseconds>(ping_).count());
@@ -69,6 +66,10 @@ public:
     void OnLogin(bool bIsNewUser);
 
     void OnEnterWorld(int seqNum, const UserDb::EnterWorldResult& ret);
+
+    void HandleTownMove(int x, int y, int z, int degrees, int speed);
+
+    void SendActorPosition(std::vector<uint8> bufBody);
 
 private:
     friend class Server;

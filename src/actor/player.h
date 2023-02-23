@@ -24,4 +24,6 @@ public:
 
 private:
     std::shared_ptr<ClientHandler> clientHandler_;
+
+    virtual void BroadcastMovement(const ClientHandler* exclude = nullptr) override;
 };

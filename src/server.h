@@ -19,7 +19,7 @@ public:
     void Shutdown();
 
     /**
-     * 클라가 world 로 이동.
+     * 클라가 world 로 이동된 경우 호출된다.
      * 이후 ClientHandler 의 tick 은 world 에서 호출한다.
      */
     void OnClientMovedToWorld(const ClientHandler* client);
