@@ -13,3 +13,11 @@ bool lutil::ParseInt(const std::string str, int& out)
     out = (int)number;
     return true;
 }
+
+void lutil::WriteInt32LEToUInt8Vector(std::vector<uint8>& buf, int value)
+{
+    buf.push_back(value & 0x000000ff);
+    buf.push_back((value & 0x0000ff00) >> 8);
+    buf.push_back((value & 0x00ff0000) >> 16);
+    buf.push_back((value & 0xff000000) >> 24);
+}

@@ -130,10 +130,7 @@ void PacketHandler::SendJsonPacket(EPacketType packetType, int seqNum,
     if ((uint8)payloadFlags & (uint8)EPayloadFlag::Compress)
     {
         // Write uncompressed size. (little endian)
-        sendBuffer_.push_back(uncompressedSize & 0x000000ff);
-        sendBuffer_.push_back((uncompressedSize & 0x0000ff00) >> 8);
-        sendBuffer_.push_back((uncompressedSize & 0x00ff0000) >> 16);
-        sendBuffer_.push_back((uncompressedSize & 0xff000000) >> 24);
+        lutil::WriteInt32LEToUInt8Vector(sendBuffer_, uncompressedSize);
     }
 
     sendBuffer_.insert(std::end(sendBuffer_), payloadPtr, payloadPtr + payloadSize);

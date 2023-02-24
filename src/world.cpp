@@ -3,7 +3,7 @@
 #include "clientHandler.h"
 #include "osLib/byteBuffer.h"
 #include "packetHandler/packetHandler.h"
-// #include "util/vector3.h"
+#include "util/vector3.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // World::TickThread
@@ -83,8 +83,6 @@ void World::BroadcastActorPosition(const Actor& actor, const ClientHandler* excl
             continue;
         }
 
-        // TODO
-
         std::vector<uint8> buf = BuildTownMovePacketBuffer(actor);
         client->SendActorPosition(buf);
     }
@@ -94,33 +92,25 @@ std::vector<uint8> World::BuildTownMovePacketBuffer(const Actor& actor)
 {
     int bodySize = 28;
     int headerSize = 4;
-    //ByteBuffer buf(bodySize + headerSize);
-	std::vector<uint8> buf;
-	buf.reserve(bodySize + headerSize);
+    std::vector<uint8> buf;
+    buf.reserve(bodySize + headerSize);
     uint8 firstByte = (uint8)((bodySize & 0xFF00) >> 8);
     uint8 secondByte = (uint8)(bodySize & 0x00FF);
-    //uint8 flag = 
-    //uint8 zero = 0;
-    //buf.Write(&firstByte, 1);
-    //buf.Write(&secondByte, 1);
-    //buf.Write(&flag, 1);
-    //buf.Write(&zero, 1);
-	buf[0] = firstByte;
-	buf[1] = secondByte;
-	buf[2] = (uint8)EPayloadFlag::Binary;
-	buf[3] = 0;
+    buf[0] = firstByte;
+    buf[1] = secondByte;
+    buf[2] = (uint8)EPayloadFlag::Binary;
+    buf[3] = 0;
 
-	// todo
-    //buf.WriteInt32LE((int)EPacketType::TOWN_ACTOR_MOVE_SC);
-    //buf.WriteInt32LE(0); // TODO player인 경우 userId 넣어줘야 됨.
+    lutil::WriteInt32LEToUInt8Vector(buf, (int)EPacketType::TOWN_ACTOR_MOVE_SC);
+    lutil::WriteInt32LEToUInt8Vector(buf, 0); // TODO id
 
-    //Vector3<double> pos = actor.GetPosition();
-    //buf.WriteInt32LE(pos.x);
-    //buf.WriteInt32LE(pos.y);
-    //buf.WriteInt32LE(pos.z);
-    //// TODO degrees, spped
-    //buf.WriteInt32LE(0);
-    //buf.WriteInt32LE(0);
+    Vector3<double> pos = actor.GetPosition();
+    lutil::WriteInt32LEToUInt8Vector(buf, pos.x);
+    lutil::WriteInt32LEToUInt8Vector(buf, pos.y);
+    lutil::WriteInt32LEToUInt8Vector(buf, pos.z);
+    // TODO degrees, spped
+    lutil::WriteInt32LEToUInt8Vector(buf, 0);
+    lutil::WriteInt32LEToUInt8Vector(buf, 0);
 
     return buf;
 }
