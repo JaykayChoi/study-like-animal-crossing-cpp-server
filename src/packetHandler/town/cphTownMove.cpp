@@ -13,8 +13,6 @@ void CphTownMove::Exec(
         return;
     }
 
-    // TODO
-
     int x = bodyRoot.get("x", "").asInt();
     int y = bodyRoot.get("y", "").asInt();
     int z = bodyRoot.get("z", "").asInt();

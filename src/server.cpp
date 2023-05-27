@@ -7,11 +7,11 @@
 class ServerListenCallback : public Network::ListenCallback
 {
 public:
-	ServerListenCallback(Server& server, int port)
-		: server_(server)
-		, port_(port)
-	{
-	}
+    ServerListenCallback(Server& server, int port)
+        : server_(server)
+        , port_(port)
+    {
+    }
 
     virtual std::shared_ptr<ITCPConnection::Callback> OnIncomingConnection(
         const std::string& remoteIPAddress, int remotePort) override
@@ -27,8 +27,8 @@ public:
     }
 
 private:
-	Server& server_;
-	int port_;
+    Server& server_;
+    int port_;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ bool Server::Init()
         return false;
     }
 
-    // TODO config 로 빼야 됨. 
+    // TODO config 로 빼야 됨.
     ports_.push_back(20100);
     serverId_ = "temp";
     maxPlayers_ = 30;

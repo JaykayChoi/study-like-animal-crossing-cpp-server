@@ -25,9 +25,9 @@ void CphAuthLogin::Exec(
 
     int curTimeUtc = (int)std::time(0);
 
+    // TODO auth server 분리하여 처리.
     AuthDb* authDb = ServerInstance::Get().GetAuthDb();
 
-    // TEMP
     if (!authDb)
     {
         return;

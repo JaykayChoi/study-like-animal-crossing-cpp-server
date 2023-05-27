@@ -103,18 +103,18 @@ ClientHandler::OnReceivedData
 */
 int Start()
 {
-    struct NetworkRAII
+    struct NetworkManagerRAII
     {
-        NetworkRAII() { NetworkManager::Get().Initialize(); }
+        NetworkManagerRAII() { NetworkManager::Get().Initialize(); }
 
-        ~NetworkRAII() { NetworkManager::Get().Terminate(); }
+        ~NetworkManagerRAII() { NetworkManager::Get().Terminate(); }
     };
 
     try
     {
         while (true)
         {
-            NetworkRAII raii;
+            NetworkManagerRAII raii;
 
             if (!ServerInstance::Get().Start())
             {

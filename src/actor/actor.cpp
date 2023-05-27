@@ -1,6 +1,6 @@
 ﻿#include "actor.h"
-#include "../world.h"
 #include "../clientHandler.h"
+#include "../world.h"
 
 Actor::Actor()
     : world_(nullptr)
@@ -23,8 +23,6 @@ void Actor::Tick(float delta)
 
 void Actor::BroadcastMovement(const ClientHandler* exclude)
 {
-    // TODO
-
     world_->BroadcastActorPosition(*this, exclude);
 }
 
