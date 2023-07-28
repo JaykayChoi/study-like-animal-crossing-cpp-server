@@ -145,7 +145,7 @@ void NetworkManager::LogCallback(int severity, const char* msg)
 void NetworkManager::RunEventLoop(NetworkManager* self)
 {
     auto timer = evtimer_new(self->eventBase_, EventLoopCallback, self);
-    timeval timeout {}; // Zero timeout.
+    timeval timeout {};
     evtimer_add(timer, &timeout);
     event_base_loop(self->eventBase_, EVLOOP_NO_EXIT_ON_EMPTY);
     event_free(timer);

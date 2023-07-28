@@ -2,9 +2,6 @@
 
 #include "../global.h"
 
-class ITCPConnection;
-class IListenServer;
-
 // Single TCP connection interface.
 class ITCPConnection
 {
