@@ -1,4 +1,4 @@
-포트폴리오는 src 폴더 하위 파일들을 참고 해주시면 됩니다.
+포트폴리오는 src/osLib 봐주시기 바랍니다.
 
 install mysql
 https://dev.mysql.com/downloads/windows/installer/8.0.html
