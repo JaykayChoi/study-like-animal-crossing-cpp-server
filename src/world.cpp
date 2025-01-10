@@ -4,6 +4,7 @@
 #include "osLib/byteBuffer.h"
 #include "packetHandler/packetHandler.h"
 #include "util/vector3.h"
+#include "util/lacUtil.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // World::TickThread

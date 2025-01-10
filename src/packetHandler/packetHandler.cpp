@@ -10,6 +10,7 @@
 #include "zlib.h"
 #include "json/json.h"
 #include <openssl/opensslconf.h>
+#include "../util/lacUtil.h"
 
 const static uint32 HEADER_LEN = 4;
 const static uint32 TEMP_BUF_SIZE = 8192;
